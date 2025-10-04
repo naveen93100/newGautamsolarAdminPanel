@@ -1,2 +1,16 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@layer components {
+  /* Jodit Word Paste Popup */
+  .jodit-dialog__content {
+    @apply bg-white text-black; /* force white background & black text */
+  }
+
+  .jodit-dialog__footer button {
+    @apply text-black;
+  }
+   .jodit-dialog__header {
+    @apply bg-white text-black; /* Header background and text */
+  }
+}

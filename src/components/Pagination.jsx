@@ -28,7 +28,7 @@ const Pagination = ({page,setPage,hasNext}) => {
 
       <button
         onClick={handleNext}
-        disabled={hasNext}
+        disabled={hasNext==false}
         className="px-4 py-2 mx-2 rounded bg-red-500 disabled:opacity-50"
       >
         Next

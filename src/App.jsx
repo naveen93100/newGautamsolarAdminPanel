@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import Media from "./pages/Media";
 
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/" element={<Navigate to='/blog' />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/media" element={<Media/>}/>
         </Route>
         <Route path="/login" element={<LoginPopup />} />
       </Routes>
