@@ -26,10 +26,10 @@ console.log(env)
       host:true,
       strictPort: true,
       historyApiFallback: true,
-      allowedHosts:[
-        "localhost",
-        "admin.gautamsolar.us"
-      ]
+      // allowedHosts:[
+      //   "localhost",
+      //   "admin.gautamsolar.us"
+      // ]
     }
   }
 })
