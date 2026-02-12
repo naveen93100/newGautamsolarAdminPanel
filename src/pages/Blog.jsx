@@ -89,10 +89,11 @@ const Blog = () => {
     const onSubmit = async (data) => {
 
         let formData = new FormData();
+        console.log(data);
 
         if (selectedBlog) {
             formData.append('Header', data.header);
-            if (data?.image) {
+            if (data?.image?.length>0) {
                 formData.append('BlogImage', data?.image[0]);
             }
             formData.append('Description', data?.Description);
@@ -148,16 +149,21 @@ const Blog = () => {
     useEffect(() => {
         const getBlog = async () => {
             try {
-                setHasNext(false);
                 setLoading(true);
                 let res = await axios.get(`https://gautamsolar.us/admin/news?NoOfNews=6&Page=${page}`);
                 if (res?.data?.data) {
                     setLoading(false);
                     setBlogs(res?.data?.data);
+                    setHasNext(true)
                 }
             } catch (er) {
-                setHasNext(true);
-                setPage(page - 1)
+                setHasNext(false);
+                
+                if(page<0) 
+                    {setPage(1)}
+                else
+                    {setPage(page - 1)}
+                
             }
             finally {
                 setLoading(false);
@@ -176,6 +182,7 @@ const Blog = () => {
         setImagePrev(selectedBlog?.ImageURL);
 
     }, [selectedBlog]);
+
 
     return (
         <>
@@ -437,7 +444,6 @@ const Blog = () => {
             <Pagination
                 page={page}
                 setPage={setPage}
-                setBlogs={setBlogs}
                 hasNext={hasNext}
             />
         </>

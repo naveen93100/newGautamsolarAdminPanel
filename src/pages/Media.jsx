@@ -20,6 +20,7 @@ const Media = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [page, setPage] = useState(1);
     const [hasNext, setHasNext] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (d) => {
 
@@ -30,9 +31,11 @@ const Media = () => {
             formData.append('image', d.image[0])
         }
         try {
+            setLoading(true);
             if (selectedMedia) {
                 let res = await axios.patch(`https://gautamsolar.us/media/${selectedMedia?._id}`, formData);
                 if (res?.data?.success) {
+                    setLoading(false);
                     toast.success(res?.data?.message);
                     setShowModal(false);
                     setImagePrev(null);
@@ -43,15 +46,21 @@ const Media = () => {
                 let res = await axios.post('https://gautamsolar.us/media', formData);
 
                 if (res?.data?.success) {
+                    setLoading(false);
                     toast.success(res?.data?.message);
                     setShowModal(false);
+                    setImagePrev(null);
                     reset();
+
                 }
             }
 
         } catch (er) {
             console.log(er?.message);
             toast.error(er?.message);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -65,8 +74,10 @@ const Media = () => {
 
     const handleDelete = async (id) => {
         try {
+            setLoading(true)
             let res = await axios.delete(`https://gautamsolar.us/media/${id}`);
             if (res?.data?.success) {
+                setLoading(false)
                 toast.success(res?.data?.message);
                 setShowDeleteModal(false);
                 setSelectedMedia(null);
@@ -76,16 +87,20 @@ const Media = () => {
             console.log(er);
             toast.error(er?.message);
         }
+        finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
         const getMedia = async () => {
             try {
-
+                setLoading(true);
                 // let res = await axios.get(`http://localhost:1008/media?page=${page}`);
                 let res = await axios.get(`https://gautamsolar.us/media?page=${page}`);
 
                 if (res?.data?.success) {
+                    setLoading(false);
                     setHasNext(res?.data?.hasNext);
                     setMedia(res?.data?.media);
                 }
@@ -94,6 +109,9 @@ const Media = () => {
                 toast.error(er?.message)
                 console.log(er?.message);
             }
+            finally {
+                setLoading(false);
+            };
         }
         getMedia();
 
@@ -124,64 +142,72 @@ const Media = () => {
                             + Add Media
                         </button>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 ">
-                        {media.length > 0 ? media.map((item) => (
-                            <div
-                                key={item?._id}
-                                className="group h-96 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col relative"
-                            >
-                                <div className="relative h-full w-full overflow-hidden">
-                                    <img
 
-                                        src={item?.mediaImg}
-                                        alt={item?.mediaTitle}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                    <div className="absolute top-3 left-3 bg-[#9B2C2C] text-white text-xs px-3 py-1 rounded-full shadow-md">
-                                        Media
+                    {loading ?
+                        <div className="w-full h-full flex items-center justify-center">
+                            <span className="loading loading-spinner bg-[#9B2C2C] loading-lg"></span>
+                        </div>
+                        :
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 ">
+                            {media.length > 0 ? media.map((item) => (
+                                <div
+                                    key={item?._id}
+                                    className="group h-96 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col relative"
+                                >
+                                    <div className="relative h-full w-full overflow-hidden">
+                                        <img
+
+                                            src={item?.mediaImg}
+                                            alt={item?.mediaTitle}
+                                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        <div className="absolute top-3 left-3 bg-[#9B2C2C] text-white text-xs px-3 py-1 rounded-full shadow-md">
+                                            Media
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Blog Content */}
-                                <div className="p-5 flex flex-col flex-1 border-t-1  border-black">
-                                    <h3 className="text-sm capitalize font-semibold text-gray-900 group-hover:text-[#9B2C2C] transition-colors truncate">
-                                        {item?.mediaTitle}
-                                    </h3>
+                                    {/* Blog Content */}
+                                    <div className="p-5 flex flex-col flex-1 border-t-1  border-black">
+                                        <h3 className="text-sm capitalize font-semibold text-gray-900 group-hover:text-[#9B2C2C] transition-colors truncate">
+                                            {item?.mediaTitle}
+                                        </h3>
 
-                                    {/* Footer with Edit & Delete */}
-                                    <div className="mt-auto pt-4 flex justify-between items-center text-sm text-gray-500">
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => {
-                                                    setShowModal(true);
-                                                    setSelectedMedia(item)
-                                                }}
-                                                className="px-3 py-1 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedMedia(item)
-                                                    setShowDeleteModal(true)
-                                                }}
-                                                className="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                            >
-                                                Delete
-                                            </button>
+                                        {/* Footer with Edit & Delete */}
+                                        <div className="mt-auto pt-4 flex justify-between items-center text-sm text-gray-500">
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowModal(true);
+                                                        setSelectedMedia(item)
+                                                    }}
+                                                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedMedia(item)
+                                                        setShowDeleteModal(true)
+                                                    }}
+                                                    className="px-3 py-1 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )) :
-                            <div className='text-gray-500 text-center col-span-full'>
-                                No media found
-                            </div>
+                            )) :
+                                <div className='text-gray-500 text-center col-span-full'>
+                                    No media found
+                                </div>
 
-                        }
+                            }
 
 
-                    </div>
+                        </div>
+                    }
+
                 </div>
             </div>
 
@@ -249,9 +275,12 @@ const Media = () => {
                                 >
                                     Cancel
                                 </button>
-                                <button type="submit" className="btn bg-[#9B2C2C] text-white hover:bg-red-700">
-                                    {selectedMedia ? 'Edit' : 'Add'}
-                                </button>
+                                {loading ? <span className=" bg-[#9B2C2C]  loading loading-spinner"></span>
+                                    :
+                                    <button type="submit" className="btn bg-[#9B2C2C] text-white hover:bg-red-700">
+                                        {selectedMedia ? 'Edit' : 'Add'}
+                                    </button>
+                                }
                             </div>
                         </form>
                     </div>
