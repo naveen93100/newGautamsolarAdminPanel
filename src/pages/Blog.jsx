@@ -46,6 +46,7 @@ const Blog = () => {
         try {
 
             let res = await axios.delete(`https://gautamsolar.us/admin/delete?uuid=${uuid}`);
+            // let res = await axios.delete(`http://localhost:1008/admin/delete?uuid=${uuid}`);
 
             if (res?.status === 200) {
                 toast.success(res?.data?.message);
@@ -89,20 +90,22 @@ const Blog = () => {
     const onSubmit = async (data) => {
 
         let formData = new FormData();
-        console.log(data);
 
         if (selectedBlog) {
-            formData.append('Header', data.header);
-            if (data?.image?.length>0) {
+            formData.append('header', data.header);
+            if (data?.image?.length > 0) {
                 formData.append('BlogImage', data?.image[0]);
             }
-            formData.append('Description', data?.Description);
-            formData.append('Body', joditContent);
-            formData.append('Tags', JSON.stringify(tags));
+            formData.append('description', data?.Description);
+            formData.append('body', joditContent);
+            formData.append('tags', JSON.stringify(tags));
+            formData.append('metaTitle', data?.MetaTitle);
+            formData.append('metaDescription', data?.MetaDescription);
 
             try {
                 setLoading(true);
                 let res = await axios.patch(`https://gautamsolar.us/admin/updateNews/${selectedBlog?.UUID}`, formData);
+                // let res = await axios.patch(`http://localhost:1008/admin/updateNews/${selectedBlog?.UUID}`, formData);
                 setLoading(false);
                 setImage(null);
                 setImagePrev(null);
@@ -111,6 +114,7 @@ const Blog = () => {
                 reset();
 
             } catch (er) {
+                toast.error(er?.response?.data?.message);
                 console.log(er)
             }
             finally {
@@ -121,22 +125,29 @@ const Blog = () => {
 
             try {
                 setLoading(true);
-                formData.append('Header', data.header);
+                formData.append('header', data.header);
                 formData.append('BlogImage', data?.image[0]);
-                formData.append('Description', data?.Description);
-                formData.append('Body', joditContent);
+                formData.append('description', data?.Description);
+                formData.append('body', joditContent);
                 formData.append('tags', JSON.stringify(tags));
+                formData.append('metaTitle', data?.MetaTitle);
+                formData.append('metaDescription', data?.MetaDescription);
+
 
                 let res = await axios.post("https://gautamsolar.us/admin/createNews", formData);
+                // let res = await axios.post("http://localhost:1008/admin/createNews", formData);
+                if (res?.data?.success) {
 
-                setLoading(false);
-                setImage(null);
-                setImagePrev(null);
-                setJoditContent('')
-                setShowModal(false);
-                reset();
+                    setLoading(false);
+                    setImage(null);
+                    setImagePrev(null);
+                    setJoditContent('')
+                    setShowModal(false);
+                    reset();
+                }
 
             } catch (er) {
+                toast.error(er?.response?.data?.message);
                 console.log(er)
             }
             finally {
@@ -151,6 +162,7 @@ const Blog = () => {
             try {
                 setLoading(true);
                 let res = await axios.get(`https://gautamsolar.us/admin/news?NoOfNews=6&Page=${page}`);
+                // let res = await axios.get(`http://localhost:1008/admin/news?NoOfNews=6&Page=${page}`);
                 if (res?.data?.data) {
                     setLoading(false);
                     setBlogs(res?.data?.data);
@@ -158,12 +170,10 @@ const Blog = () => {
                 }
             } catch (er) {
                 setHasNext(false);
-                
-                if(page<0) 
-                    {setPage(1)}
-                else
-                    {setPage(page - 1)}
-                
+
+                if (page < 0) { setPage(1) }
+                else { setPage(page - 1) }
+
             }
             finally {
                 setLoading(false);
@@ -177,6 +187,8 @@ const Blog = () => {
         if (!selectedBlog) return;
         setValue('header', selectedBlog?.Header);
         setValue('Description', selectedBlog?.Description)
+        setValue('MetaTitle', selectedBlog?.MetaTitle);
+        setValue('MetaDescription', selectedBlog?.MetaDescription);
         setTags(JSON.parse(selectedBlog?.Tags));
         setJoditContent(selectedBlog?.Body)
         setImagePrev(selectedBlog?.ImageURL);
@@ -252,7 +264,7 @@ const Blog = () => {
                                     </button>
 
                                     <div className="flex flex-wrap gap-2">
-                                        {tags.map((tag, index) => (
+                                        {tags?.map((tag, index) => (
                                             <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full flex items-center gap-1">
                                                 <a href={tag.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">{tag.tag}</a>
                                                 <button type="button" onClick={() => setTags((prev) => prev.filter((_, idx) => idx !== index))} className="text-red-500 font-bold">×</button>
@@ -270,7 +282,41 @@ const Blog = () => {
                                         className="input input-bordered w-full text-white bg-slate-700"
                                         {...register("Description", { required: "Description is required" })}
                                     />
-                                    {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
+                                    {errors.Description && <p className="text-red-500 text-sm mt-1">{errors.Description.message}</p>}
+                                </div>
+
+                                {/* Meta title */}
+                                <div className="flex flex-col text-black">
+                                    <label className="font-medium mb-1 text-white">Meta Title</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Meta Title"
+                                        className="input input-bordered w-full text-white bg-slate-700"
+                                        {...register("MetaTitle", {
+                                            required: "MetaTitle is required", maxLength: {
+                                                value: 60,
+                                                message: "Meta Title cannot exceed 60 characters"
+                                            }
+                                        })}
+                                    />
+                                    {errors.MetaTitle && <p className="text-red-500 text-sm mt-1">{errors.MetaTitle.message}</p>}
+                                </div>
+
+                                {/* Meta description */}
+                                <div className="flex flex-col text-black">
+                                    <label className="font-medium mb-1 text-white">Meta Description</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Meta Description"
+                                        className="input input-bordered w-full text-white bg-slate-700"
+                                        {...register("MetaDescription", {
+                                            required: "MetaTitle is required", maxLength: {
+                                                value: 160,
+                                                message: "Meta Description cannot exceed 160 characters"
+                                            }
+                                        })}
+                                    />
+                                    {errors.MetaDescription && <p className="text-red-500 text-sm mt-1">{errors.MetaDescription.message}</p>}
                                 </div>
 
                                 {/* body */}

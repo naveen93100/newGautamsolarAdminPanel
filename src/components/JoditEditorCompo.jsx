@@ -1,96 +1,3 @@
-// import JoditEditor from 'jodit-react';
-// import React from 'react'
-// import 'jodit/es2021/jodit.min.css';
-
-// const JoditEditorCompo = ({ setJoditContent, joditContent }) => {
-//     const joditConfig = {
-//         readonly: false,
-//         height: 400,
-//         resize: true,
-//         uploader: {
-//             insertImageAsBase64URI: true,
-//         },
-//         toolbarAdaptive: false,
-//         buttons: [
-//             'bold',
-//             'italic',
-//             'underline',
-//             '|',
-//             'brush',
-//             'eraser',
-//             '|',
-//             'ul',
-//             'ol',
-//             '|',
-//             'table',
-//             'link',
-//             'image',
-//             '|',
-//             'align',
-//             '|',
-//             'paragraph',
-//             'fontsize',
-//             '|',
-//             'undo',
-//             'redo'
-//         ],
-//         allowHTML: true,
-//         useClasses: false,
-
-//         defaultActionOnPaste: "insert_only_text",
-
-//         cleanHTML: {
-//             removeStyles: true,
-//             fillEmptyParagraph: true,
-//         },
-//         processPasteHTML: function (html) {
-
-//             // Create temp container
-//             const div = document.createElement("div");
-//             div.innerHTML = html;
-
-//             // Remove ALL styles/classes from every element
-//             div.querySelectorAll("*").forEach((el) => {
-//                 el.removeAttribute("style");
-//                 el.removeAttribute("class");
-//                 el.removeAttribute("color");
-//                 el.removeAttribute("face");
-
-//                 // remove Word specific attributes
-//                 [...el.attributes].forEach(attr => {
-//                     if (attr.name.startsWith("mso")) {
-//                         el.removeAttribute(attr.name);
-//                     }
-//                 });
-//             });
-
-//             // remove font tags
-//             div.querySelectorAll("font").forEach(font => {
-//                 const parent = font.parentNode;
-
-//                 while (font.firstChild) {
-//                     parent.insertBefore(font.firstChild, font);
-//                 }
-
-//                 parent.removeChild(font);
-//             });
-
-//             return div.innerHTML;
-//         }
-//     }
-//     return (
-//         <div>
-//             <JoditEditor
-//                 value={joditContent}
-//                 config={joditConfig}
-//                 onBlur={(content) => setJoditContent(content)}
-//             />
-//         </div>
-//     )
-// }
-
-// export default React.memo(JoditEditorCompo);
-
 
 import JoditEditor from 'jodit-react';
 import React, { useMemo } from 'react';
@@ -117,10 +24,8 @@ const JoditEditorCompo = ({ setJoditContent, joditContent }) => {
         ],
         allowHTML: true,
 
-        // FIX 1: Changed from "insert_only_text" → that mode bypasses processPasteHTML entirely
         defaultActionOnPaste: "insert_clear_html",
 
-        // FIX 2: removeStyles was wiping out color/bold applied by the brush tool
         cleanHTML: {
             removeStyles: false,
             fillEmptyParagraph: true,
@@ -160,6 +65,7 @@ const JoditEditorCompo = ({ setJoditContent, joditContent }) => {
                     });
 
                     // Unwrap Word auto-generated <a> tags (file://, about:, empty href)
+
                     if (el.tagName === 'A') {
                         const href = el.getAttribute('href') || '';
                         const isWordAutoLink =
@@ -252,7 +158,7 @@ const JoditEditorCompo = ({ setJoditContent, joditContent }) => {
 
             return div.innerHTML;
         }
-    }), []); // useMemo prevents config object recreation on every render
+    }), []);
 
     return (
         <div>
