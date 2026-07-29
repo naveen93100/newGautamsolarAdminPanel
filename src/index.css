@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* @layer components {
+
+  .jodit-dialog__content {
+    @apply bg-white text-black;
+  }
+
+  .jodit-dialog__footer button {
+    @apply text-black;
+  }
+
+  .jodit-dialog__header {
+    @apply bg-white text-black;
+  }
+
+  .jodit-wysiwyg {
+    color: black;
+  }
+}
+  */
+
+@layer components {
+  .jodit-container .jodit-wysiwyg {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Safety net — force override any white/invisible inline color */
+  .jodit-wysiwyg [style*="color: white"],
+  .jodit-wysiwyg [style*="color:white"],
+  .jodit-wysiwyg [style*="color: #fff"],
+  .jodit-wysiwyg [style*="color:#fff"],
+  .jodit-wysiwyg [style*="color: #ffffff"],
+  .jodit-wysiwyg [style*="color:#ffffff"],
+  .jodit-wysiwyg [style*="color: windowtext"],
+  .jodit-wysiwyg [style*="color:windowtext"] {
+    color: black !important;
+  }
+
+  /* Word auto-links often carry white color */
+  .jodit-wysiwyg a {
+    color: revert;
+  }
+
+  .jodit-dialog__content  { @apply bg-white text-black; }
+  .jodit-dialog__footer button { @apply text-black; }
+  .jodit-dialog__header   { @apply bg-white text-black; }
+}
