@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import { useEffect, useState } from "react";
 // import JoditEditor from "jodit-react";
 // import { useForm } from 'react-hook-form';
@@ -498,6 +499,8 @@
 
 // export default Blog;
 
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
 import { useEffect, useState } from "react";
 import JoditEditor from "jodit-react";
 import { useForm } from 'react-hook-form';
@@ -539,10 +542,13 @@ const Blog = () => {
     const [page, setPage] = useState(1);
     const [hasNext, setHasNext] = useState(false);
 
+<<<<<<< HEAD
     // FAQ state
     const [faqs, setFaqs] = useState([]);
     const [faqQuestionInput, setFaqQuestionInput] = useState("");
     const [faqAnswerInput, setFaqAnswerInput] = useState("");
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
 
 
 
@@ -582,6 +588,7 @@ const Blog = () => {
         setLinkInput('')
     }
 
+<<<<<<< HEAD
     const handleFaq = () => {
         if (!faqQuestionInput) {
             toast.error('Question is Required')
@@ -598,6 +605,8 @@ const Blog = () => {
         setFaqAnswerInput('')
     }
 
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
     const handleImage = (e) => {
         let val = e?.target?.files[0];
         setImage(val);
@@ -619,8 +628,11 @@ const Blog = () => {
             formData.append('description', data?.Description);
             formData.append('body', joditContent);
             formData.append('tags', JSON.stringify(tags));
+<<<<<<< HEAD
             formData.append('faq', JSON.stringify(faqs));
 
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
             formData.append('metaTitle', data?.MetaTitle);
             formData.append('metaDescription', data?.MetaDescription);
 
@@ -644,7 +656,10 @@ const Blog = () => {
             }
         }
         else {
+<<<<<<< HEAD
             console.log(faqs);
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
 
             try {
                 setLoading(true);
@@ -653,7 +668,10 @@ const Blog = () => {
                 formData.append('description', data?.Description);
                 formData.append('body', joditContent);
                 formData.append('tags', JSON.stringify(tags));
+<<<<<<< HEAD
                 formData.append('faq', JSON.stringify(faqs));
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
                 formData.append('metaTitle', data?.MetaTitle);
                 formData.append('metaDescription', data?.MetaDescription);
 
@@ -713,8 +731,12 @@ const Blog = () => {
         setValue('Description', selectedBlog?.Description)
         setValue('MetaTitle', selectedBlog?.MetaTitle);
         setValue('MetaDescription', selectedBlog?.MetaDescription);
+<<<<<<< HEAD
         setTags(selectedBlog?.Tags);
         setFaqs(JSON.parse(selectedBlog?.FAQ) ? (typeof selectedBlog.FAQ === 'string' ? JSON.parse(selectedBlog.FAQ) : selectedBlog.FAQ) : []);
+=======
+        setTags(JSON.parse(selectedBlog?.Tags));
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
         setJoditContent(selectedBlog?.Body)
         setImagePrev(selectedBlog?.ImageURL);
 
@@ -798,6 +820,7 @@ const Blog = () => {
                                     </div>
                                 </div>
 
+<<<<<<< HEAD
                                 {/* FAQ */}
                                 <div className="flex flex-col">
                                     <label className="font-medium mb-2 text-white">FAQ (Frequently Asked Questions)</label>
@@ -840,6 +863,8 @@ const Blog = () => {
                                     </div>
                                 </div>
 
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
                                 {/* Description */}
                                 <div className="flex flex-col text-black">
                                     <label className="font-medium mb-1 text-white">Description</label>
@@ -908,7 +933,10 @@ const Blog = () => {
                                             reset()
                                             setJoditContent(null)
                                             setTags([])
+<<<<<<< HEAD
                                             setFaqs([])
+=======
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
                                             setImagePrev(null)
                                         }}
                                     >
@@ -1064,4 +1092,8 @@ const Blog = () => {
     );
 };
 
+<<<<<<< HEAD
 export default Blog;
+=======
+export default Blog;
+>>>>>>> 352d9880bf0c20182ddcee5ee40b10c732eeb56b
